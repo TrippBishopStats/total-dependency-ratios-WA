@@ -1,30 +1,41 @@
 ---
-title: "Total dependency ratios in Washington State 2011-2021"
+title: "Dependency ratios in Washington State 2011-2021"
 ---
 
-# Overview
-Total dependency ratios are important quantities that facilitate policy planning. Understanding the 
+## Overview
+Dependency ratios are important quantities that facilitate policy planning. They provide interested governmental and non-governmental entities insight into population dynamics for regions of interest. The insights gain can help planners to anticipate changing needs as age demographics within the population change. Given scarcity of resources, dependency ratios can inform where limited funds can best be applied to ensure that they are used effectively, efficiently, and equitably.  
+
+## Dependency ratio definitions
+3 different dependency ratios will be considered in this analysis: total dependency, child dependency, and elderly dependency. These ratios, as defined by *File & Kominski (2009)* are:
+
+**Total dependency ratio** - the ratio of all dependents to non-dependents.
+$$
+\frac{\text{child dependents} + \text{elderly dependents}}{\text{non-dependents}}\times 100
+$$
+**Child dependency ratio** - The ratio of children, aged 0 to 18, in the population to the total number of non-dependents or producers in the population.
+$$
+\frac{\text{child dependents}}{\text{non-dependents}}\times 100
+$$
+**elderly dependency ratio** - The ratio of adults, aged 65 and up, in the population to the total number of non-dependents or producers in the population.
+$$
+\frac{\text{elderly dependents}}{\text{non-dependents}}\times 100
+$$
+Non-dependents are defined as those individuals in the population, aged 18 to 64, who are available to contribute to the economy, producing good and services and paying taxes.
+
+Dependency ratios approaching 100 are considered problematic as this implies a 1:1 ratio of dependents to those providing the revenue to fund services. There are a number of short comings with this system, as detailed by File & Kominski, but it is still a useful way of analysing population dynamics. 
+
+## Resources
+This project provides additional resources including an interactive dashboard and all source code and data used during the project.
+
+* [Dependency ratios dashboard](https://public.tableau.com)
+* [Github code repository](https://github.com/TrippBishopStats/total-dependency-ratios-WA)
+
+## Data source
+The data used in this project can be found at [County Demographic Dashboard](https://doh.wa.gov/data-and-statistical-reports/washington-tracking-network-wtn/demographics/county-dashboard). All fields were selected and all years 2011-2021 were included.
 
 
+## References
 
+* [Dependency Rations in the United States: A State and Metropolitan Area Analysis](https://www.census.gov/content/dam/Census/library/working-papers/2012/demo/dependency-ratios-in-the-united-states.pdf)
 
-*notes* 
-
-Discuss what TDR is, broadly, and why entities are interested.
-
-Discuss how to compute TDR and the child and aged variants.
-
-
-
-TDR is a measure of the pressure on the productive population and is important to governments and non-government actors who have an interest in understanding population dynamics.
-
-##Data source
-
-[County Demographic Dashboard](https://doh.wa.gov/data-and-statistical-reports/washington-tracking-network-wtn/demographics/county-dashboard)
-
-
-Sources:
-
-[Dependency Rations in the United States: A State and Metropolitan Area Analysis](https://www.census.gov/content/dam/Census/library/working-papers/2012/demo/dependency-ratios-in-the-united-states.pdf)
-
-[Dependency ratio](https://en.wikipedia.org/wiki/Dependency_ratio)
+* [Dependency ratio](https://en.wikipedia.org/wiki/Dependency_ratio)
