@@ -1,0 +1,25 @@
+---
+title: "Total dependency ratios in Washington State 2011-2021"
+---
+
+# Overview
+Total dependency ratios are important quantities that facilitate policy planning. Understanding the 
+
+
+
+
+*notes* 
+
+Discuss what TDR is, broadly, and why entities are interested.
+
+Discuss how to compute TDR and the child and aged variants.
+
+
+
+TDR is a measure of the pressure on the productive population and is important to governments and non-government actors who have an interest in understanding population dynamics.
+
+Sources:
+
+[Dependency Rations in the United States: A State and Metropolitan Area Analysis](https://www.census.gov/content/dam/Census/library/working-papers/2012/demo/dependency-ratios-in-the-united-states.pdf)
+
+[Dependency ratio](https://en.wikipedia.org/wiki/Dependency_ratio)
