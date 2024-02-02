@@ -18,6 +18,11 @@ Discuss how to compute TDR and the child and aged variants.
 
 TDR is a measure of the pressure on the productive population and is important to governments and non-government actors who have an interest in understanding population dynamics.
 
+##Data source
+
+[County Demographic Dashboard](https://doh.wa.gov/data-and-statistical-reports/washington-tracking-network-wtn/demographics/county-dashboard)
+
+
 Sources:
 
 [Dependency Rations in the United States: A State and Metropolitan Area Analysis](https://www.census.gov/content/dam/Census/library/working-papers/2012/demo/dependency-ratios-in-the-united-states.pdf)
