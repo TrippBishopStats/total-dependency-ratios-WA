@@ -1,7 +1,11 @@
 ---
 title: "Data Preparation"
-author: "Tripp Bishop"
 ---
+
+## Overview
+Before the data can be processed, it needs to be prepared. After the data are imported, the features will be inspected and any changes to the structure of the data will be noted. Feature name changes will be made if any are necessary.
+
+The **tidyverse** libraries and the **janitor** package will be used throughout the analysis, so they are imported now.
 
 ```{r setup}
 #| message: false
@@ -9,23 +13,31 @@ library(tidyverse)
 library(janitor)
 ```
 
-## Overview
-
-
-
-
 ## Preparation
+To begin, we will load the data and take a quick look at it with `glimpse`.
 
 ```{r import data}
+#| message: false
 df_counties <- read_csv("data/WA_demographic_data.csv")
-```
-
-```{r}
 glimpse(df_counties)
 ```
+### Renaming features
+From the `glimspe`, it's clear that many of the feature names are not going to be easy to work with as is. We can use the `clean_names` function from the **janitor** package to generate *snake case* feature names.
 
 ```{r rename features}
 df_counties <- df_counties |> 
   clean_names()
+
+glimpse(df_counties)
+```
+These will be much easier to work with. The feature data types look reasonable for this stage of the analysis. `year` and `geography` will be converted to factors during the processing phase. The other features will need to be investigated in more detail before final data types will be decided. `max_total_population` looks like it might contain a lot of missing values, so it will need more scrutiny.
+
+
+```{r save data as RDS}
+#| echo: false
+# This step is required for quarto websites where each document executes in its own environment. The
+# dataframe will have to be saved to RDS format at the end of each step of the analysis so that its state
+# is preserved for the next step to load it and continue.
+write_rds(df_counties, file="intermediate/df_countries_prepped.rds")
 ```
 
