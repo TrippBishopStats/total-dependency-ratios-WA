@@ -3,7 +3,11 @@ title: "Dependency ratios in Washington State 2011-2021"
 ---
 
 ## Overview
-Dependency ratios are important quantities that facilitate policy planning. They provide interested governmental and non-governmental entities insight into population dynamics for regions of interest. The insights gain can help planners to anticipate changing needs as age demographics within the population change. Given scarcity of resources, dependency ratios can inform where limited funds can best be applied to ensure that they are used effectively, efficiently, and equitably.  
+Dependency ratios are important quantities that facilitate policy planning. They provide interested governmental and non-governmental entities insight into population dynamics for regions of interest. The insights gain can help planners to anticipate changing needs as age demographics within the population change. Given scarcity of resources, dependency ratios can inform where limited funds can best be applied to ensure that they are used effectively, efficiently, and equitably.
+
+## Objectives
+
+
 
 ## Dependency ratio definitions
 3 different dependency ratios will be considered in this analysis: total dependency, child dependency, and elderly dependency. These ratios, as defined by *File & Kominski (2009)* are:
