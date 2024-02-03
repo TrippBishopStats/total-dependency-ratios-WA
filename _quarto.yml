@@ -9,6 +9,8 @@ website:
         text: Home
       - href: data-prep.qmd
         text: Prepare
+      - href: data-proc.qmd
+        text: Process
 
 format:
   html:
