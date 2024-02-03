@@ -1,0 +1,31 @@
+---
+title: "Data Preparation"
+author: "Tripp Bishop"
+---
+
+```{r setup}
+#| message: false
+library(tidyverse)
+library(janitor)
+```
+
+## Overview
+
+
+
+
+## Preparation
+
+```{r import data}
+df_counties <- read_csv("data/WA_demographic_data.csv")
+```
+
+```{r}
+glimpse(df_counties)
+```
+
+```{r rename features}
+df_counties <- df_counties |> 
+  clean_names()
+```
+
