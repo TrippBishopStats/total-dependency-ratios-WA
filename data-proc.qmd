@@ -1,0 +1,123 @@
+---
+title: "Data Processing"
+---
+
+## Overview
+
+
+```{r import gt package}
+#| message: false
+library(tidyverse)
+library(gt)
+library(naniar)
+```
+
+
+```{r read in county dataframe}
+#| echo: false
+df_counties <- read_rds("intermediate/df_countries_prepped.rds")
+```
+
+
+## Feature Inspection
+
+
+### `year`
+We know from the county dashboard that the data should be from 2011 to 2021. This feature is really categorical, not numeric. There is also a distinct order, so it will be converted into an ordinal factor.
+
+```{r distinct years}
+df_counties |> 
+  distinct(year) |> pull()
+```
+There are 10 distinct `year` values, which is expected. Given that the data are correct, we can now convert to a factor.
+
+```{r convert year to factor}
+df_counties <- df_counties |> 
+  mutate(
+    year = fct_inseq(factor(year, ordered = TRUE))
+  )
+
+head(df_counties$year)
+```
+Now `year` is a factor ordered sequentially.
+
+### `geography`
+The `geography` feature contains the state and county names. There are 39 counties in Washington, so we expect that there will be 40 distinct values in this feature. This feature is also categorical in nature, but nominal rather than ordinal.
+
+```{r distinct geographies}
+df_counties |> 
+  distinct(geography) |> pull()
+```
+It looks like the data are correct. There are 40 distinct values, as expected.
+
+```{r geography as factor}
+df_counties <- df_counties |> 
+  mutate(
+    geography = factor(geography)
+  )
+levels(df_counties$geography)
+```
+The levels have been recorded alphabetically, which makes sense for the most part. Since "Washington State" isn't a county, it can be repositioned at the front, to separate it from the counties.
+
+```{r}
+df_counties$geography <- fct_relevel(df_counties$geography, "Washington State", after=0)
+levels(df_counties$geography)
+```
+Now the factor is set up properly.
+
+### `selection_filter`
+
+```{r distinct selection_filter}
+df_counties |> 
+  distinct(selection_filter) |> pull()
+```
+
+
+### `selection_value`
+
+```{r distinct selection_value}
+df_counties |> 
+  distinct(selection_value) |> pull()
+```
+
+### `max_percent_total_population`
+
+```{r}
+summary(df_counties$max_percent_total_population)
+```
+No missing values and all values are positive and range between 0 and 100, so this data is valid.
+
+
+### `max_sub_population`
+
+
+```{r}
+summary(df_counties$max_sub_population)
+```
+No missing values and all values are positive with a reasonable maximum value, so this data is valid.
+
+### `max_total_population`
+
+```{r summary max_total_population}
+summary(df_counties$max_total_population)
+```
+This feature looks problematic. From the `summary` we can see that 5591 entries are `NA` out of 7040 observations. That is a `r round(5591/7040*100, 2)` missing rate.
+
+```{r}
+df_counties |> 
+  filter(is.na(max_total_population)) |> 
+  group_by(year, geography) |> 
+  count()
+```
+
+
+
+
+```{r save data as RDS}
+#| echo: false
+# This step is required for quarto websites where each document executes in its own environment. The
+# dataframe will have to be saved to RDS format at the end of each step of the analysis so that its state
+# is preserved for the next step to load it and continue.
+write_rds(df_counties, file="intermediate/df_countries_proced.rds")
+```
+
