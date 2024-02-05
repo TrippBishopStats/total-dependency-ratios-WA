@@ -11,6 +11,10 @@ website:
         text: Prepare
       - href: data-proc.qmd
         text: Process
+      - href: analysis.qmd
+        text: Analysis
+      - href: visualisations.qmd
+        text: Visualise
 
 format:
   html:
