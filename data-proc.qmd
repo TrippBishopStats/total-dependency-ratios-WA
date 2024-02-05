@@ -8,8 +8,7 @@ title: "Data Processing"
 ```{r import gt package}
 #| message: false
 library(tidyverse)
-library(gt)
-library(naniar)
+library(tidylog)
 ```
 
 
@@ -66,50 +65,88 @@ levels(df_counties$geography)
 Now the factor is set up properly.
 
 ### `selection_filter`
+Next, look at the selection filter distinct values.
 
 ```{r distinct selection_filter}
 df_counties |> 
   distinct(selection_filter) |> pull()
 ```
+These are all reasonable. The only one that we are interested in is the "Age"
+filter.
 
+```{r filter on Age}
+df_counties <- df_counties |>
+  filter(selection_filter == "Age")
+```
 
 ### `selection_value`
+
+The selection values should now only pertain to "Age".
 
 ```{r distinct selection_value}
 df_counties |> 
   distinct(selection_value) |> pull()
 ```
+These values look correct. Nothing more needs to be done with this variable.
 
 ### `max_percent_total_population`
+This feature pertains to what percentage of the population a given filter 
+applies to for the given `geography`. It's a percentage, so all values should be 
+between 0 and 100.
 
 ```{r}
 summary(df_counties$max_percent_total_population)
 ```
-No missing values and all values are positive and range between 0 and 100, so this data is valid.
-
+There are no missing values and all values are positive and range between 0 and 100, so this data is valid.
 
 ### `max_sub_population`
-
+This feature pertains to the number of people that fall into the given
+`selection_filter`/`selection_value` combination for the given `geography`. All 
+values should be positive and no larger than the total population of the state 
+(at most).
 
 ```{r}
 summary(df_counties$max_sub_population)
 ```
-No missing values and all values are positive with a reasonable maximum value, so this data is valid.
+This is the case. There are no missing values.
 
 ### `max_total_population`
+Without a codebook, it is not clear what this feature represents. Furthermore, 
+most of the observations are missing data for this variable. Given that this 
+field won't be required for our purposes, it will be removed from the dataset.
 
 ```{r summary max_total_population}
 summary(df_counties$max_total_population)
 ```
-This feature looks problematic. From the `summary` we can see that 5591 entries are `NA` out of 7040 observations. That is a `r round(5591/7040*100, 2)` missing rate.
 
 ```{r}
-df_counties |> 
-  filter(is.na(max_total_population)) |> 
-  group_by(year, geography) |> 
-  count()
+df_counties <- df_counties |> 
+  select(-max_total_population)
 ```
 
+
+
+## Dataframe pivot and new feature creation 
+Now, we need to pivot all of the age data into a single observation so that we
+can perform different dependency ratio calculations for each year/geography
+combination. We will need to first filter out all of the non "Age" selection
+filters, then drop the variables that we don't need for our calculations so
+that we get a single observation for each year/geography combination.
+
+
+```{r pivot wider}
+df_counties <- df_counties |> 
+  select(-c(max_percent_total_population, selection_filter)) |> 
+  pivot_wider(names_from=selection_value, values_from=max_sub_population, names_prefix="age_") |> 
+  clean_names()
+
+df_counties <- df_counties |> 
+  mutate(
+    total_dep_ratio = round((age_65 + age_1_14 + age_1)/(age_45_64 + age_25_44 + age_15_24)*100,2),
+    child_dep_ratio = round((age_1_14 + age_1)/(age_45_64 + age_25_44 + age_15_24)*100,2),
+    aged_dep_ratio = round((age_65)/(age_45_64 + age_25_44 + age_15_24)*100,2)
+  )
+```
 
 
 
