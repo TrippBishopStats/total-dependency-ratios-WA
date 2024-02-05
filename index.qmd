@@ -7,7 +7,9 @@ Dependency ratios are important quantities that facilitate policy planning. They
 
 ## Objectives
 
-
+* Understand how dependency ratios are evolving in Washington over the period from 2011 to 2021.
+* Determine whether child or aged dependency is driving dependency ratio evolution in the individual counties.
+* Explore potential policy implications for those counties with the largest dependency ratios.
 
 ## Dependency ratio definitions
 3 different dependency ratios will be considered in this analysis: total dependency, child dependency, and elderly dependency. These ratios, as defined by *File & Kominski (2009)* are:
@@ -16,7 +18,7 @@ Dependency ratios are important quantities that facilitate policy planning. They
 $$
 \frac{\text{child dependents} + \text{elderly dependents}}{\text{non-dependents}}\times 100
 $$
-**Child dependency ratio** - The ratio of children, aged 0 to 18, in the population to the total number of non-dependents or producers in the population.
+**Child dependency ratio** - The ratio of children, aged 0 to 14, in the population to the total number of non-dependents or producers in the population.
 $$
 \frac{\text{child dependents}}{\text{non-dependents}}\times 100
 $$
@@ -24,7 +26,7 @@ $$
 $$
 \frac{\text{elderly dependents}}{\text{non-dependents}}\times 100
 $$
-Non-dependents are defined as those individuals in the population, aged 18 to 64, who are available to contribute to the economy, producing good and services and paying taxes.
+Non-dependents are defined as those individuals in the population, aged 15 to 64, who are available to contribute to the economy, producing good and services and paying taxes.
 
 Dependency ratios approaching 100 are considered problematic as this implies a 1:1 ratio of dependents to those providing the revenue to fund services. There are a number of short comings with this system, as detailed by File & Kominski, but it is still a useful way of analysing population dynamics. 
 
@@ -41,5 +43,4 @@ The data used in this project can be found at [County Demographic Dashboard](htt
 ## References
 
 * [Dependency Rations in the United States: A State and Metropolitan Area Analysis](https://www.census.gov/content/dam/Census/library/working-papers/2012/demo/dependency-ratios-in-the-united-states.pdf)
-
 * [Dependency ratio](https://en.wikipedia.org/wiki/Dependency_ratio)
