@@ -5,9 +5,10 @@ title: "Data Processing"
 ## Overview
 
 
-```{r import gt package}
+```{r setup}
 #| message: false
 library(tidyverse)
+library(janitor)
 library(tidylog)
 ```
 
