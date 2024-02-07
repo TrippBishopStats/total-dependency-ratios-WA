@@ -5,36 +5,150 @@ title: "Data Analysis"
 ## Overview
 Now that the data are cleaned and prepared, we can create our visualisation.
 We need geometry data to create the map of Washington with county boundaries.
-The fill value for each county will the be total dependency ratio that we just
-created.
+The fill value for each county will the be one of the dependency ratio created 
+previously.
 
 ```{r setup}
+#| message: false
 library(tidyverse)
 library(sf)
 library(tigris)
+library(gt)
 theme_set(theme_minimal())
 ```
 
 ```{r read in county dataframe}
 #| echo: false
-df_counties <- read_rds("intermediate/df_countries_prepped.rds")
+df_counties <- read_rds("intermediate/df_countries_proced.rds")
+```
+
+```{r}
+years <- levels(df_counties$year)
+start_year <- first(years)
+last_year <- last(years)
+```
+
+
+## Statewide dependency ratios
+
+```{r}
+df_counties |> 
+  filter(geography == "Washington State") |> 
+  select(-(age_65:age_1)) |> 
+  pivot_longer(total_dep_ratio:aged_dep_ratio, names_to = "dep_ratio", values_to = "ratio_val") |> 
+  mutate(
+    dep_ratio = fct_rev(fct_recode(as_factor(dep_ratio), 
+                             "Total" = "total_dep_ratio",
+                             "Child" = "child_dep_ratio",
+                             "Aged" = "aged_dep_ratio"))
+  ) |> 
+  ggplot(aes(x=year, y=ratio_val, fill=dep_ratio)) +
+  geom_col(position = "dodge", colour="white") +
+  labs(
+    x = element_blank(),
+    y = "Value",
+    fill = "Dependency ratio",
+    title = paste("Total dependency increases from", start_year, "to", last_year, sep=" "),
+    subtitle = "Child and aged dependencies move in opposite directions"
+  ) +
+  theme(
+    legend.position = "bottom"
+  )
+  
+```
+```{r table of DR values at state level}
+df_counties |> 
+  filter(geography == "Washington State") |> 
+  select(-c(geography, age_65:age_1), 
+         "Year"=year, "Child"=child_dep_ratio, "Aged"=aged_dep_ratio, "Total"=total_dep_ratio) |> 
+  mutate(
+    pct_change_total = round((Total - lag(Total, n=1))/lag(Total, n=1)*100, 2)
+  ) |> 
+  gt() |> 
+  tab_header(
+    title = paste("Changes in dependency ratios in Washington State,", start_year, "-", last_year, sep=" ")
+  ) |> 
+  cols_label(
+    pct_change_total = "Percent Change Total"
+  ) |> 
+  tab_options(
+    table.width = pct(100)
+  )
+  
 ```
 
 Create the Washington state county geometries
 ```{r create WA geometries}
-wa_county <- counties(state = "WA", cb = TRUE, class = "sf")
+wa_county <- counties(state = "WA", cb = TRUE, class = "sf", progress_bar = FALSE)
 ```
 
-Inner join the geometries with the demographic data and create a faceted map
-that shows the evolution of total dependency ratio by county from 2011 to
-2021.
+Inner join the geometries with the demographic data. This will allow us to generate maps that include county boundaries and the dependency ratios as fill data.
 
+```{r join geometry and demographic data}
+df_joined <- wa_county |>
+  inner_join(df_counties, by=c("NAME"="geography"))
+```
+
+## Dependency ratios
+
+### Child depenency ratio by county
+
+```{r generate CDR map}
+df_joined |>
+  ggplot() +
+  geom_sf(aes(fill=child_dep_ratio), colour="white") +
+  scale_fill_continuous(type = "viridis",limits=c(0, 100)) +
+  theme_void() +
+  theme(
+    legend.position = "bottom"
+  ) +
+  facet_wrap(~year) +
+  labs(
+    title="Child dependency ratios for Washington State counties",
+    subtitle=paste("Ratios stay relatively flat from", start_year, "to", last_year, sep = " "),
+    caption="Data source: Washington State County Demography Dashboard",
+    fill="Child dependency ratio"
+  ) +
+  theme(
+    plot.caption.position = "plot",
+    plot.title.position = "plot"
+  )
+```
+
+
+
+### Aged dependency ratio by county
+
+```{r}
+df_joined |>
+  ggplot() +
+  geom_sf(aes(fill=aged_dep_ratio), colour="white") +
+  scale_fill_continuous(type = "viridis", limits=c(0, 100)) +
+  theme_void() +
+  theme(
+    legend.position = "bottom"
+  ) +
+  facet_wrap(~year) +
+  labs(
+    title="Aged dependency ratios for Washington State counties",
+    subtitle=paste("Ratios increase from", start_year, "to", last_year, sep=" "),
+    caption="Data source: Washington State County Demography Dashboard",
+    fill="Aged dependency ratio"
+  ) +
+  theme(
+    plot.caption.position = "plot",
+    plot.title.position = "plot"
+  )
+```
+
+### Total dependency ratio by county
+Create a faceted map that shows the evolution of total dependency ratio by county from 2011 to
+2021.
 ```{r generate TDR map}
-wa_county |>
-  inner_join(df_ages, by=c("NAME"="geography")) |>
+df_joined |>
   ggplot() +
   geom_sf(aes(fill=total_dep_ratio), colour="white") +
-  scale_fill_continuous(type = "viridis") +
+  scale_fill_continuous(type = "viridis", limits=c(0, 100)) +
   theme_void() +
   theme(
     legend.position = "bottom"
@@ -42,9 +156,12 @@ wa_county |>
   facet_wrap(~year) +
   labs(
     title="Total dependency ratios for Washington State counties",
-    subtitle="Ratios increase from 2011 to 2021",
+    subtitle=paste("Ratios increase from", start_year, "to", last_year, sep=" "),
     caption="Data source: Washington State County Demography Dashboard",
     fill="Total dependency ratio"
+  ) +
+  theme(
+    plot.caption.position = "plot",
+    plot.title.position = "plot"
   )
 ```
-
