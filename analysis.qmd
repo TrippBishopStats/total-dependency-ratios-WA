@@ -1,3 +1,50 @@
 ---
 title: "Data Analysis"
 ---
+
+## Overview
+Now that the data are cleaned and prepared, we can create our visualisation.
+We need geometry data to create the map of Washington with county boundaries.
+The fill value for each county will the be total dependency ratio that we just
+created.
+
+```{r setup}
+library(tidyverse)
+library(sf)
+library(tigris)
+theme_set(theme_minimal())
+```
+
+```{r read in county dataframe}
+#| echo: false
+df_counties <- read_rds("intermediate/df_countries_prepped.rds")
+```
+
+Create the Washington state county geometries
+```{r create WA geometries}
+wa_county <- counties(state = "WA", cb = TRUE, class = "sf")
+```
+
+Inner join the geometries with the demographic data and create a faceted map
+that shows the evolution of total dependency ratio by county from 2011 to
+2021.
+
+```{r generate TDR map}
+wa_county |>
+  inner_join(df_ages, by=c("NAME"="geography")) |>
+  ggplot() +
+  geom_sf(aes(fill=total_dep_ratio), colour="white") +
+  scale_fill_continuous(type = "viridis") +
+  theme_void() +
+  theme(
+    legend.position = "bottom"
+  ) +
+  facet_wrap(~year) +
+  labs(
+    title="Total dependency ratios for Washington State counties",
+    subtitle="Ratios increase from 2011 to 2021",
+    caption="Data source: Washington State County Demography Dashboard",
+    fill="Total dependency ratio"
+  )
+```
+
