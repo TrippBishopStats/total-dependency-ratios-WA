@@ -10,6 +10,7 @@ title: "Data Processing"
 library(tidyverse)
 library(janitor)
 library(tidylog)
+theme_set(theme_minimal())
 ```
 
 
@@ -125,8 +126,6 @@ df_counties <- df_counties |>
   select(-max_total_population)
 ```
 
-
-
 ## Dataframe pivot and new feature creation 
 Now, we need to pivot all of the age data into a single observation so that we
 can perform different dependency ratio calculations for each year/geography
@@ -149,7 +148,56 @@ df_counties <- df_counties |>
   )
 ```
 
+## Univariate checks on new features
+Now that new dependency ratio features have been created, they need to be checked to ensure that the values are reasonable. `tidylog` output indicates that there are no `NA` values in the new features. We now need to plot data to ensure that the values are reasonable.
 
+### `total_dep_ratio`
+The total dependency ratio should be positive. A histogram, faceted by year shows that the values for all years are plausible. There are no negative values and the distributions do not show any extreme outliers. 
+
+```{r univarite checks total_dep_ratio}
+#| message: false
+df_counties |> 
+  ggplot(aes(x=total_dep_ratio)) +
+  geom_histogram(colour="white") +
+  labs(
+    x="Total dependency ratio",
+    y="Count",
+    title="Total dependency ratio distrution"
+  ) +
+  facet_wrap(~year)
+```
+
+### `child_dep_ratio`
+The child dependency ratio should always be positive. A histogram, faceted by year shows that the values for all years are plausible. There are no negative values and the distributions do not show any extreme outliers.
+
+```{r univarite checks child_dep_ratio}
+#| message: false
+df_counties |> 
+  ggplot(aes(x=child_dep_ratio)) +
+  geom_histogram(colour="white") +
+  labs(
+    x="Child dependency ratio",
+    y="Count",
+    title="Child dependency ratio distrution"
+  ) +
+  facet_wrap(~year)
+```
+
+### `aged_dep_ratio`
+The aged dependency ratio should always be positive. A histogram, faceted by year shows that the values for all years are plausible. There are no negative values and the distributions do not show any extreme outliers.
+
+```{r univarite checks aged_dep_ratio}
+#| message: false
+df_counties |> 
+  ggplot(aes(x=aged_dep_ratio)) +
+  geom_histogram(colour="white") +
+  labs(
+    x="Aged dependency ratio",
+    y="Count",
+    title="Aged dependency ratio distrution"
+  ) +
+  facet_wrap(~year)
+```
 
 ```{r save data as RDS}
 #| echo: false
