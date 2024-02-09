@@ -14,7 +14,7 @@ website:
       - href: analysis.qmd
         text: Analysis
       - href: visualisations.qmd
-        text: Visualise
+        text: Conclusion
 
 format:
   html:
