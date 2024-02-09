@@ -28,7 +28,12 @@ $$
 $$
 Non-dependents are defined as those individuals in the population, aged 15 to 64, who are available to contribute to the economy, producing good and services and paying taxes.
 
-Dependency ratios approaching 100 are considered problematic as this implies a 1:1 ratio of dependents to those providing the revenue to fund services. There are a number of short comings with this system, as detailed by File & Kominski, but it is still a useful way of analysing population dynamics. 
+Dependency ratios approaching 100 are considered problematic as this implies a 1:1 ratio of dependents to those providing the revenue to fund services. There are a number of short comings with this system, as detailed by File & Kominski, but it is still a useful way of analysing population dynamics.
+
+::: {.callout-caution}
+## Discrepancies with File & Kominski
+File and Kominski have access to data with more granular age slices. As a result, they are able to explore dependency ratios more deeply. The numbers determined in this study will likely be lower than those reported by File & Kominski due to the fact that this study uses 0-14 rather than 0-18 for calculating child dependency ratios.
+:::
 
 ## Resources
 This project provides additional resources including an interactive dashboard and all source code and data used during the project.
@@ -44,3 +49,7 @@ The data used in this project can be found at [County Demographic Dashboard](htt
 
 * [Dependency Rations in the United States: A State and Metropolitan Area Analysis](https://www.census.gov/content/dam/Census/library/working-papers/2012/demo/dependency-ratios-in-the-united-states.pdf)
 * [Dependency ratio](https://en.wikipedia.org/wiki/Dependency_ratio)
+
+<section class="button-container">
+  <a href="data-prep.html" role="button" class="btn btn-primary">Continue to Data Preparation</a>
+</section>
