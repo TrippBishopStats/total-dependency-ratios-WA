@@ -77,6 +77,50 @@ df_counties |>
   
 ```
 
+
+
+```{r}
+df_counties |> 
+  filter(geography != "Washington State" & year == 2021) |> 
+  select(geography, total_dep_ratio, child_dep_ratio, aged_dep_ratio) |> 
+  arrange(desc(child_dep_ratio)) |> 
+  head(10)
+```
+
+
+
+
+
+```{r}
+df_counties |> 
+  filter(geography == "Washington State") |>
+  ggplot(aes(x=as.numeric(year), y=total_dep_ratio)) +
+  geom_point() +
+  geom_smooth(method="lm", se=TRUE)
+```
+
+
+```{r}
+df_counties |> 
+  filter(geography == "Jefferson") |>
+  ggplot(aes(x=as.numeric(year), y=total_dep_ratio)) +
+  geom_point() +
+  geom_smooth(method="lm", se=TRUE)
+
+```
+
+```{r}
+df_counties |> 
+  filter(geography == "Garfield") |>
+  ggplot(aes(x=as.numeric(year), y=total_dep_ratio)) +
+  geom_point() +
+  geom_smooth(method="lm", se=TRUE)
+
+```
+
+## Dependency ratios in Washington Counties
+
+
 Create the Washington state county geometries
 ```{r create WA geometries}
 wa_county <- counties(state = "WA", cb = TRUE, class = "sf", progress_bar = FALSE)
@@ -89,7 +133,7 @@ df_joined <- wa_county |>
   inner_join(df_counties, by=c("NAME"="geography"))
 ```
 
-## Dependency ratios
+
 
 ### Child depenency ratio by county
 
