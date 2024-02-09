@@ -1,5 +1,8 @@
 ---
 title: "Data Analysis"
+html:
+  code-fold: true
+  code-summary: "show the code"
 ---
 
 ## Overview
@@ -22,7 +25,8 @@ theme_set(theme_minimal())
 df_counties <- read_rds("intermediate/df_countries_proced.rds")
 ```
 
-```{r}
+```{r store year range in variables}
+#| echo: false
 years <- levels(df_counties$year)
 start_year <- first(years)
 last_year <- last(years)
@@ -141,6 +145,7 @@ df_joined <- wa_county |>
 df_joined |>
   ggplot() +
   geom_sf(aes(fill=child_dep_ratio), colour="white") +
+  # for the same colour scale for all dependency maps with limits
   scale_fill_continuous(type = "viridis",limits=c(0, 100)) +
   theme_void() +
   theme(
@@ -167,6 +172,7 @@ df_joined |>
 df_joined |>
   ggplot() +
   geom_sf(aes(fill=aged_dep_ratio), colour="white") +
+  # for the same colour scale for all dependency maps with limits
   scale_fill_continuous(type = "viridis", limits=c(0, 100)) +
   theme_void() +
   theme(
@@ -192,6 +198,7 @@ Create a faceted map that shows the evolution of total dependency ratio by count
 df_joined |>
   ggplot() +
   geom_sf(aes(fill=total_dep_ratio), colour="white") +
+  # for the same colour scale for all dependency maps with limits
   scale_fill_continuous(type = "viridis", limits=c(0, 100)) +
   theme_void() +
   theme(
