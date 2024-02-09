@@ -210,3 +210,6 @@ df_counties |>
 write_rds(df_counties, file="intermediate/df_countries_proced.rds")
 ```
 
+<section class="button-container">
+  <a href="analysis.html" role="button" class="btn btn-primary">Continue to Data Analysis</a>
+</section>
