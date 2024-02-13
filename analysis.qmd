@@ -158,8 +158,8 @@ round(TDR_preds,2)
 
 
 ## Counties with highest total dependency ratios
+The table below shows the counties with the highest total dependency ratios in 2021. The counties in this list all have much higher aged dependency ratios than the statewide value (25.71) while generally having typical child dependency ratios. Jefferson county being the notable exception with a child dependency ratio of 18.58.
 
-**add comentary here**
 ```{r identify high ratio counties}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -181,9 +181,8 @@ df_high_ratio |>
 ```
 
 ### Where these counties are located
+In order to understand how dependency ratios vary across the state, shape files for the counties are imported and the dependency ratios are overlaid on a map of the state.
 
-
-Create the Washington state county geometries
 ```{r create WA geometries}
 #| message: false
 #| code-fold: true
@@ -223,6 +222,7 @@ wa_county |>
     plot.title.position = "plot"
   )
 ```
+From this map, it is clear that the distribution of the high dependency counties is not random. They are located on the east/west extremes of the state. Furthermore, 5 of the top 6 are located on the west coast, while the other five are located in the eastern quarter of the state.
 
 ```{r map high ratio counties child dependency rates}
 #| warning: false
@@ -252,6 +252,35 @@ wa_county |>
     plot.caption.position = "plot",
     plot.title.position = "plot"
   )
+```
+These counties have roughly similar rates of child dependency, with Jefferson and San Juan Counties being notable exceptions. That said, there is a statistically significant difference, with $\alpha=0.05$, between the mean child dependency ratios of the west coast and eastern counties.
+
+```{r comparing west coast and eastern counties child dependency ratios}
+
+west_coast_CDR <- c(18.85, 24.40, 24.47, 24.55, 19.69)
+eastern_CDR <- c(31.6, 30.61, 27.34, 25.46, 27.13)
+state_CDR_mean <- 27.73
+
+t.test(
+  west_coast_CDR, # west coast counties
+  eastern_CDR  # eastern counties
+)
+```
+If we compare the west coast counties to the statewide mean, there is a statistically significant difference at the $\alpha=0.5$ significance level.
+
+```{r testing west coast against statewide CDR}
+t.test(
+  x=west_coast_CDR,
+  mu = state_CDR_mean
+)
+```
+If we compare the eastern counties to the statewide mean, we can see that there is *not* a statistically significant difference at the $\alpha=0.5$ significance level.
+
+```{r testing eastern counties against statewide CDR}
+t.test(
+  x=eastern_CDR,
+  mu = state_CDR_mean
+)
 ```
 
 ```{r map high ratio counties aged dependency rates}
@@ -283,6 +312,17 @@ wa_county |>
     plot.title.position = "plot"
   )
 ```
+The same is true of the aged dependency ratio means for west coast and eastern counties. With $\alpha = 0.05$, there is a statistically significant different between the to two regions' counties.
+
+```{r comparing west coast and eastern counties aged dependency ratios}
+t.test(
+  c(79.39, 66.51, 64.54, 62.54, 67.15), # west coast counties
+  c(59.65, 53.93, 51.14, 52.23, 50.42)  # eastern counties
+)
+```
+The aged dependency ratios for both county groups is so much higher than the statewide mean that performing a statistical test is unnecessary.
+
+What this tells us is that among the counties with the highest total dependencies there are significant differences between these counties and the state as a whole and that there are regional differences between subgroups in these 10 counties.
 
 ### Modeling changes in total dependency
 
