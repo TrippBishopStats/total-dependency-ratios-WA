@@ -13,7 +13,7 @@ website:
         text: Process
       - href: analysis.qmd
         text: Analysis
-      - href: visualisations.qmd
+      - href: conclusions.qmd
         text: Conclusion
 
 format:
