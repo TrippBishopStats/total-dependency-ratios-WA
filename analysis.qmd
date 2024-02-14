@@ -183,17 +183,12 @@ df_high_ratio |>
 ### Where these counties are located
 In order to understand how dependency ratios vary across the state, shape files for the counties are imported and the dependency ratios are overlaid on a map of the state.
 
-```{r create WA geometries}
-#| message: false
-#| code-fold: true
-#| code-summary: "Show the code"
-wa_county <- counties(state = "WA", cb = TRUE, class = "sf", progress_bar = FALSE)
-```
-
-```{r map high ratio counties}
+```{r create WA geometries and map high ratio counties}
 #| warning: false
 #| code-fold: true
 #| code-summary: "Show the code"
+
+wa_county <- counties(state = "WA", cb = TRUE, class = "sf", progress_bar = FALSE)
 
 label_size <- 3.5
 
@@ -256,7 +251,8 @@ wa_county |>
 These counties have roughly similar rates of child dependency, with Jefferson and San Juan Counties being notable exceptions. That said, there is a statistically significant difference, with $\alpha=0.05$, between the mean child dependency ratios of the west coast and eastern counties.
 
 ```{r comparing west coast and eastern counties child dependency ratios}
-
+#| code-fold: true
+#| code-summary: "Show the code"
 west_coast_CDR <- c(18.85, 24.40, 24.47, 24.55, 19.69)
 eastern_CDR <- c(31.6, 30.61, 27.34, 25.46, 27.13)
 state_CDR_mean <- 27.73
@@ -269,6 +265,8 @@ t.test(
 If we compare the west coast counties to the statewide mean, there is a statistically significant difference at the $\alpha=0.5$ significance level.
 
 ```{r testing west coast against statewide CDR}
+#| code-fold: true
+#| code-summary: "Show the code"
 t.test(
   x=west_coast_CDR,
   mu = state_CDR_mean
@@ -277,6 +275,8 @@ t.test(
 If we compare the eastern counties to the statewide mean, we can see that there is *not* a statistically significant difference at the $\alpha=0.5$ significance level.
 
 ```{r testing eastern counties against statewide CDR}
+#| code-fold: true
+#| code-summary: "Show the code"
 t.test(
   x=eastern_CDR,
   mu = state_CDR_mean
@@ -315,6 +315,8 @@ wa_county |>
 The same is true of the aged dependency ratio means for west coast and eastern counties. With $\alpha = 0.05$, there is a statistically significant different between the to two regions' counties.
 
 ```{r comparing west coast and eastern counties aged dependency ratios}
+#| code-fold: true
+#| code-summary: "Show the code"
 t.test(
   c(79.39, 66.51, 64.54, 62.54, 67.15), # west coast counties
   c(59.65, 53.93, 51.14, 52.23, 50.42)  # eastern counties
@@ -325,7 +327,7 @@ The aged dependency ratios for both county groups is so much higher than the sta
 What this tells us is that among the counties with the highest total dependencies there are significant differences between these counties and the state as a whole and that there are regional differences between subgroups in these 10 counties.
 
 ### Modeling changes in total dependency
-
+Predicting future changes to the total dependency ratio for counties can help county planners understand what budgetary pressures they might expect to face in the coming years. While attempting to forecast far into the future comes with risk, we can use simple linear models to project into the near future for the counties with the highest total dependency ratios.
 
 ```{r build linear models}
 #| message: false
@@ -371,6 +373,42 @@ df_county_models |>
     )
   )
 ```
+
+The trend lines for all 10 counties show a clear upward movement, although the Garfield County data has an interesting bend in it that occurred in 2016. This behaviour isn't seen in the other counties. The Garfield County data for 2015-2016 shows the following:
+
+```{r Garfield County 2015-2016}
+#| code-fold: true
+#| code-summary: "Show the code"
+df_counties |> 
+  filter(geography == "Garfield" & year %in% c(2015,2016)) |>
+  select(-(age_65:age_1)) |>
+  select("Child"=child_dep_ratio, "Aged"=aged_dep_ratio, "Total"=total_dep_ratio) |> 
+  gt() |> 
+  tab_header(
+    title = paste("Garfield County dependency data, 2015-2016")
+  ) |> 
+  tab_options(
+    table.width = pct(100)
+  )
+```
+
+There is a noticeable jump in both the child and aged dependency rates from 2015 to 2016. There is not a significant change in the total population of the county over the decade from 2011 to 2021 as shown in the following table:
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+df_counties |> 
+  filter(geography=="Garfield") |> 
+  select("Year" = year, age_65:age_1) |> 
+  pivot_longer(cols=age_65:age_1, names_to = "brackets", values_to = "value") |> 
+  group_by(Year) |> 
+  summarise(`Total Population` = ceiling(sum(value))) |> 
+  gt()
+```
+
+There is a small decline from 2015 to 2016. In looking for an explanation for this jump I consulted the [Washington Regional Economic Analysis Project](https://washington.reaproject.org/analysis/comparative-trends-analysis/population/tools/530023/530000/) as well as [Garfield County, WA](https://datausa.io/profile/geo/garfield-county-wa/) looking for a possible explanation for this change. Additional consultation with Washington State Department of Health may be required to understand what might cause this pattern in the data.
+
+The following table shows the model slopes for each of the ten counties. The interpretation of these slopes is that for each year the total dependency ratio will change by the amount of the slope. For Jefferson County, the state with the highest total dependency ratio, we can expect the total dependency ratio to change by 3.31 points each year. This almost 5 times higher than Washington State's model slope of 0.67. Garfield County has the steepest slope, but as mentioned previously, the integrity of the Garfield County data is in question. The standard error for the Garfield County slope reflects this.
 
 ```{r table of model results}
 #| code-fold: true
