@@ -6,7 +6,7 @@ website:
   navbar:
     left:
       - href: index.qmd
-        text: Home
+        text: Overview
       - href: data-prep.qmd
         text: Prepare
       - href: data-proc.qmd
@@ -14,7 +14,7 @@ website:
       - href: analysis.qmd
         text: Analysis
       - href: conclusions.qmd
-        text: Conclusion
+        text: Conclusions
 
 format:
   html:
