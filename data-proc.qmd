@@ -6,7 +6,7 @@ html:
 ---
 
 ## Overview
-
+Now that the data have been imported and the features renamed, the data can be cleaned and examined to ensure that it is accurate, complete, and consistent.
 
 ```{r setup}
 #| message: false
@@ -24,7 +24,7 @@ df_counties <- read_rds("intermediate/df_countries_prepped.rds")
 
 
 ## Feature Inspection
-
+Explore the individual features in the dataset, looking for outliers, bad data points, and unusual or surprising patterns in the data. For categorical features, look for miscoded values or anything else that might interfere with the analysis.
 
 ### `year`
 We know from the county dashboard that the data should be from 2011 to 2021. This feature is really categorical, not numeric. There is also a distinct order, so it will be converted into an ordinal factor.
@@ -33,7 +33,7 @@ We know from the county dashboard that the data should be from 2011 to 2021. Thi
 df_counties |> 
   distinct(year) |> pull()
 ```
-There are 10 distinct `year` values, which is expected. Given that the data are correct, we can now convert to a factor.
+There are 10 distinct `year` values, which is expected. Given that the data are correct, we can now convert to a factor because `year` is not really a numeric feature. Instead, it is an ordinal categorical feature.
 
 ```{r convert year to factor}
 df_counties <- df_counties |> 
@@ -70,14 +70,13 @@ levels(df_counties$geography)
 Now the factor is set up properly.
 
 ### `selection_filter`
-Next, look at the selection filter distinct values.
+`selection_filter` should be a categorical feature. First, determine what the set of possible values is.
 
 ```{r distinct selection_filter}
 df_counties |> 
   distinct(selection_filter) |> pull()
 ```
-These are all reasonable. The only one that we are interested in is the "Age"
-filter.
+These are all reasonable. The only one that we are interested in is the `Age` filter so we will only keep  observations from the dataset with `Age` as the `selection_filter` value. 
 
 ```{r filter on Age}
 df_counties <- df_counties |>
@@ -86,7 +85,7 @@ df_counties <- df_counties |>
 
 ### `selection_value`
 
-The selection values should now only pertain to "Age".
+The selection values should now only pertain to `Age`.
 
 ```{r distinct selection_value}
 df_counties |> 
@@ -132,10 +131,9 @@ df_counties <- df_counties |>
 ## Dataframe pivot and new feature creation 
 Now, we need to pivot all of the age data into a single observation so that we
 can perform different dependency ratio calculations for each year/geography
-combination. We will need to first filter out all of the non "Age" selection
+combination. We will need to first filter out all of the non `Age` selection
 filters, then drop the variables that we don't need for our calculations so
 that we get a single observation for each year/geography combination.
-
 
 ```{r pivot wider}
 df_counties <- df_counties |> 
